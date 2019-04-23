@@ -8,9 +8,54 @@ const titleInputEl = document.querySelector('.book-input__title'),
 
 
 // Event Listeners
+document.addEventListener('DOMContentLoaded', getBooksFromLocalStorage);
 submitEl.addEventListener('click', addBook);
 tableEl.addEventListener('click', removeBook);
 searchEl.addEventListener('keyup', searchBooks);
+
+
+// Get Books from Local Storage
+function getBooksFromLocalStorage() {
+  let books;
+
+  if (localStorage.getItem('books') === null) {
+    books = [];
+  } else {
+    books = JSON.parse(localStorage.getItem('books'))
+  }
+
+  books.forEach(function(book) {
+    // Create New Elements
+    const row = document.createElement('tr');
+    const rowTitle = document.createElement('td');
+    const rowAuthor = document.createElement('td');
+    const rowRating = document.createElement('td');
+    const rowRemove = document.createElement('td');
+
+    // Add Classes to Elements
+    row.classList.add('table__row')
+    rowTitle.classList.add('table__row--title')
+    rowAuthor.classList.add('table__row--author')
+    rowRating.classList.add('table__row--rating')
+    rowRemove.classList.add('table__row--remove')
+
+    // Add Text Content to Elements
+    rowTitle.appendChild(document.createTextNode(book.title));
+    rowAuthor.appendChild(document.createTextNode(book.author));
+    rowRating.appendChild(document.createTextNode(book.rating));
+
+    rowRemove.innerHTML = `<i class="far fa-times-circle remove"></i>`;
+
+    // Append Child Elements to Row Element
+    row.appendChild(rowTitle);
+    row.appendChild(rowAuthor);
+    row.appendChild(rowRating);
+    row.appendChild(rowRemove);
+
+    // Append Entire Book Row to UI
+    tableEl.appendChild(row);
+  })
+}
 
 
 // Add Book
@@ -23,7 +68,13 @@ function addBook(e) {
 
   // If title field is empty, throw and error and do not submit
   if (title === '') {
-    errorMessage('Please enter the book title');
+    // Throw error message
+    errorMessage();
+
+    // Remve error message after 2 seconds
+    setTimeout(removeErrorMessage, 3000);
+
+    // Use 'return' to stop the addBook() function from executing
     return;
   }
 
@@ -56,7 +107,7 @@ function addBook(e) {
   rowAuthor.appendChild(document.createTextNode(book.author));
   rowRating.appendChild(document.createTextNode(book.rating));
 
-  rowRemove.innerHTML = `<i class="far fa-times-circle"></i>`;
+  rowRemove.innerHTML = `<i class="far fa-times-circle remove"></i>`;
 
   // Append Child Elements to Row Element
   row.appendChild(rowTitle);
@@ -66,6 +117,9 @@ function addBook(e) {
 
   // Append Entire Book Row to UI
   tableEl.appendChild(row);
+
+  // Add Book to Local Storage
+  addToLocalStorage(title, author, rating);
 
   // Clear Input Fields
   titleInputEl.value = '';
@@ -77,8 +131,18 @@ function addBook(e) {
 }
 
 // Remove Book
-function removeBook() {
-  console.log('triggered');
+function removeBook(e) {
+  console.log(e.target.classList);
+  // Remove from UI
+  if (e.target.classList.contains('remove')) {
+    console.log(e.target.parentElement.parentElement)
+    e.target.parentElement.parentElement.remove();
+    console.log('triggered');
+
+    // Remove from Local Storage
+    const book = e.target.parentElement.parentElement.firstElementChild.textContent;
+    removeFromLocalStorage(book);
+  }
 }
 
 // Search Books
@@ -89,10 +153,10 @@ function searchBooks() {
   for (let book of bookEls) {
     const title = book.firstElementChild.textContent.toLowerCase();
 
-    if (title.indexOf(searchTerm) === -1) { // -1 if there is no match
-      book.style.display = 'none';
+    if (title.includes(searchTerm)) {
+      book.style.display = 'table-row';
     } else {
-      book.style.display = 'table-row'; // this is displayed as a 'table-row', not as 'block'
+      book.style.display = 'none';
     }
   }
 
@@ -105,6 +169,53 @@ function searchBooks() {
 }
 
 // Error Message
-function errorMessage(text) {
+function errorMessage() {
+  titleInputEl.placeholder = "please enter a title";
+  titleInputEl.classList.add('placeholder-style');
+}
 
+// Remove Error Message
+function removeErrorMessage() {
+  titleInputEl.placeholder = "Book Title";
+  titleInputEl.classList.remove('placeholder-style');
+}
+
+// Add to Local Storage
+function addToLocalStorage(title, author, rating) {
+  let books;
+
+  if (localStorage.getItem('books') === null) {
+    books = [];
+  } else {
+    books = JSON.parse(localStorage.getItem('books'));
+  }
+
+  const book = {
+    title: title,
+    author: author,
+    rating: rating
+  }
+
+  books.push(book);
+
+  localStorage.setItem('books', JSON.stringify(books))
+}
+
+// Remove from Local Storage
+function removeFromLocalStorage(bookToRemove) {
+  let books;
+
+  if (localStorage.getItem('books') === null) {
+    books = [];
+  } else {
+    books = JSON.parse(localStorage.getItem('books'))
+  }
+
+  books.forEach(function(book, index) {
+    if (bookToRemove === book.title) {
+      books.splice(index, 1)
+    }
+  })
+
+  localStorage.setItem('books', JSON.stringify(books));
 }
