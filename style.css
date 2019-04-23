@@ -1,0 +1,132 @@
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: inherit;
+}
+
+:root {
+  --primary-color: #223f69;
+}
+
+html {
+  font-size: 62.5%;
+}
+
+body {
+  box-sizing: border-box;
+  font-family: 'Nunito', sans-serif;
+  background-color: #eee;
+}
+
+.container {
+  max-width: 60%;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+/* Input Section */
+.book-input {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 3rem;
+}
+
+.book-input__title,
+.book-input__author {
+  font-size: 1.6rem;
+  color: var(--primary-color);
+  padding: 1rem 2rem;
+  margin-right: 1rem;
+  border: 1px solid var(--primary-color);
+  border-radius: .4rem;
+  outline: none;
+}
+
+.book-input__rating {
+  font-size: 1.6rem;
+  height: 4rem;
+  margin-right: 2rem;
+  border: 1px solid var(--primary-color);
+  cursor: pointer;
+  outline: none;
+}
+
+.book-input__submit {
+  font-size: 1.6rem;
+  padding: 1rem 2rem;
+  color: #fff;
+  background-color: var(--primary-color);
+  border: none;
+  border-radius: 3rem;
+  cursor: pointer;
+  outline: none;
+}
+
+.book-input__submit:hover {
+  opacity: .9;
+}
+
+/* Search */
+.search {
+  margin-left: 5rem;
+  padding: .5rem 1rem;
+  border: 1px solid #bbb;
+  border-radius: 3rem;
+  outline: none;
+}
+
+/* Table Header */
+.table {
+  border-collapse: collapse;
+  margin: 0 auto;
+  margin-top: 2rem;
+  width: 90%;
+}
+
+.table__head--row {
+  border-bottom: 1px solid #000;
+  font-size: 2.2rem;
+}
+
+.table__head--title,
+.table__head--author,
+.table__head--rating,
+.table__head--remove {
+  padding: 1rem;
+}
+
+.table__head--title {
+  text-align: left;
+}
+
+.table__head--title { width: 55% }
+.table__head--author { width: 20% }
+.table__head--rating { width: 20% }
+.table__head--remove { width: 5% }
+
+/* Table Body */
+.table__row--title,
+.table__row--author,
+.table__row--rating,
+.table__row--remove {
+ padding: .5rem 1rem;
+}
+
+.table__row--author,
+.table__row--rating,
+.table__row--remove {
+  text-align: center;
+}
+
+.table__row--remove {
+  color: #f14f4f;
+  cursor: pointer;
+}
+
+.table__row {
+  font-size: 1.8rem;
+  border-bottom: 1px dotted #bbb;
+}
